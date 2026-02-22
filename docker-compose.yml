@@ -1,0 +1,19 @@
+services:
+  dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: dev
+    ports:
+      - "5000:5000"
+    volumes:
+      - /home/peter/Projects:/home
+      # alternative: clone nvim config in Dockerfile (git clone https://github.com/ptyszkow/nvim)
+      # - /home/peter/.config/nvim:/root/.config/nvim
+      - /home/peter/.config/opencode:/root/.config/opencode
+      - /home/peter/.claude:/root/.claude
+      - /home/peter/.claude.json:/root/.claude.json
+    working_dir: /home
+    stdin_open: true
+    tty: true
+    command: bash
