@@ -22,10 +22,14 @@ RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.4/install.sh | b
     && NODE_DIR="$NVM_DIR/versions/node/$(nvm version default)/bin" \
     && ln -sf "$NODE_DIR/node" /usr/local/bin/node \
     && ln -sf "$NODE_DIR/npm" /usr/local/bin/npm \
-    && ln -sf "$NODE_DIR/npx" /usr/local/bin/npx
+    && ln -sf "$NODE_DIR/npx" /usr/local/bin/npx \
+    && npm install -g @anthropic-ai/claude-code \
+    && ln -sf "$NODE_DIR/claude" /usr/local/bin/claude
 
 # Neovim, tree-sitter, uv + basedpyright
-ENV PATH="/root/.local/bin:$PATH"
+ENV PATH="/root/.opencode/bin:/root/.local/bin:$PATH" \
+    TERM=xterm-256color \
+    COLORTERM=truecolor
 RUN curl -fsSL https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz \
     | tar -C /opt -xz \
     && mv /opt/nvim-linux-x86_64 /opt/nvim \
