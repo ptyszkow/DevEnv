@@ -12,7 +12,7 @@ Ubuntu-based dev container with:
 - lua5.1, luarocks
 - Go, git
 
-Also maps your host projects and config into the container.
+Also mounts your projects into the container under the home directory and keeps CLI auth plus `uv` cache/tool data in one named volume.
 
 ## .NET 10
 
@@ -84,7 +84,7 @@ After installing global tools, make sure `~/.dotnet/tools` is on your PATH (it s
 
 ## Start
 
-From this directory (`/home/peter/Projects/DevContainer`):
+From this directory:
 
 ```bash
 podman compose up -d --build
@@ -104,12 +104,15 @@ podman compose down
 
 ## Volumes and ports
 
-- Host `/home/peter/Projects` -> Container `/home`
-- Host `/home/peter/.config/opencode` -> Container `/root/.config/opencode`
-- Host `/home/peter/.claude` -> Container `/root/.claude`
-- Host `/home/peter/.claude.json` -> Container `/root/.claude.json`
-- Named volume `nvim` -> Container `/root`
-- Container port `5000` exposed to host `5000`
+- Host `${HOME}/Projects` -> Container `/home/ubuntu/Projects`
+- Named volume `dev-data` -> Container `/data`
+- Symlink `/home/ubuntu/.claude` -> `/data/claude`
+- Symlink `/home/ubuntu/.local/share/opencode` -> `/data/opencode`
+- Symlink `/home/ubuntu/.cache/uv` -> `/data/uv/cache`
+- Symlink `/home/ubuntu/.local/share/uv` -> `/data/uv/data`
+- Container port `5000` exposed to host `5001`
+- Container port `1455` exposed to host `1455`
+- Container port `4096` exposed to host `4096`
 
 ## Git user/email inside container
 
@@ -124,4 +127,3 @@ Check inside container:
 ```bash
 podman exec -it dev git config --global --list
 ```
-# DevEnv

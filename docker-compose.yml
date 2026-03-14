@@ -1,16 +1,27 @@
 services:
   dev:
     build:
-      context: /home/peter
-      dockerfile: Projects/DevEnv/Dockerfile
+      context: .
+      args:
+        GIT_USER_NAME: ${GIT_USER_NAME:-peter}
+        GIT_USER_EMAIL: ${GIT_USER_EMAIL:-peter@peter.com}
+    environment:
+      OPENAI_API_KEY: "123" 
     container_name: dev
+    userns_mode: keep-id
+    devices:
+      - nvidia.com/gpu=all
+    group_add:
+      - keep-groups
     ports:
       - "5000:5000"
+      - "1455:1455"
+      - "4096:4096"
     volumes:
-      - /home/peter/Projects:/workspace
-      # alternative: clone nvim config in Dockerfile (git clone https://github.com/ptyszkow/nvim)
-      # - /home/peter/.config/nvim:/root/.config/nvim
-    working_dir: /workspace
+      - ${HOME}/Projects:/home/ubuntu/Projects
+      - dev-data:/data
     stdin_open: true
     tty: true
-    command: bash
+
+volumes:
+  dev-data:
