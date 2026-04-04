@@ -5,23 +5,35 @@ services:
       args:
         GIT_USER_NAME: ${GIT_USER_NAME:-peter}
         GIT_USER_EMAIL: ${GIT_USER_EMAIL:-peter@peter.com}
-    environment:
-      OPENAI_API_KEY: "123" 
+    env_file:
+      - .env
     container_name: dev
     userns_mode: keep-id
-    devices:
-      - nvidia.com/gpu=all
     group_add:
       - keep-groups
-    ports:
-      - "5000:5000"
-      - "1455:1455"
-      - "4096:4096"
+    # Uncomment for NVIDIA GPU access (requires CDI configured)
+    # devices:
+    #   - nvidia.com/gpu=all
+    #ports:
+    #  - "5000:5000"
+    #  - "1455:1455"
+    #  - "4096:4096"
     volumes:
       - ${HOME}/Projects:/home/ubuntu/Projects
-      - dev-data:/data
+      - claude_home:/home/ubuntu/.claude
+      - ${HOME}/.claude.json:/home/ubuntu/.claude.json
+      - opencode_config:/home/ubuntu/.config/opencode
+      - opencode_data:/home/ubuntu/.local/share/opencode
+      - opencode_cache:/home/ubuntu/.cache/opencode
+      - uv_cache:/home/ubuntu/.cache/uv
+      - uv_data:/home/ubuntu/.local/share/uv
     stdin_open: true
     tty: true
 
 volumes:
-  dev-data:
+  claude_home:
+  opencode_config:
+  opencode_data:
+  opencode_cache:
+  uv_cache:
+  uv_data:
